@@ -13,5 +13,6 @@ router
   router
   .route('/:dishId')
   .get(validate(menuValidation.getDish),menuController.getDish)
+  .delete(menuController.deleteDish)
 
   module.exports = router;

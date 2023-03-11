@@ -24,11 +24,17 @@ const getDish = catchAsync(async (req, res) => {
   res.send(dish);
 });
 
+const deleteDish = catchAsync(async (req, res) => {
+  const dish = await menuService.deleteDishById(req.params.dishId);
+  res.send(dish);
+});
+
 
 
 
 module.exports = {
   getMenu,
   createDish,
-  getDish
+  getDish,
+  deleteDish
 };
