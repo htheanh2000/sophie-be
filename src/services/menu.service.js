@@ -1,7 +1,4 @@
-const httpStatus = require('http-status');
 const { Menu } = require('../models');
-const ApiError = require('../utils/ApiError');
-
 /**
  * Create a dish
  * @param {Object} dishBody
