@@ -44,6 +44,11 @@ const reservationSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    occasions: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,

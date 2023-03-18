@@ -9,6 +9,7 @@ const makeReservation = {
     date: Joi.string().required(),
     time: Joi.string().required(),
     size: Joi.string().required(),
+    occasions: Joi.string().required(),
     note: Joi.string().allow('', null),
     notification: Joi.boolean().required(),
   }),

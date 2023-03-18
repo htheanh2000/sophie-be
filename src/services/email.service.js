@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const fs = require('fs');
+const path = require('path');
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -23,6 +25,35 @@ if (config.env !== 'test') {
 const sendEmail = async (to, subject, text) => {
   const msg = { from: config.email.from, to, subject, text };
   await transport.sendMail(msg);
+};
+
+/**
+ * Send an email
+ * @param {string} to
+ * @param {string} subject
+ * @param {string} template
+ * @returns {Promise}
+ */
+const sendHtmlEmail = async (to, subject, template) => {
+  fs.readFile(path.join(__dirname, '../mail-templates/reservation/index.html'), { encoding: 'utf-8' }, function (err, html) {
+    if (err) {
+      logger.error(err);
+    } else {
+      var mailOptions = {
+        from: config.email.from,
+        to: to,
+        subject: subject,
+        html: html,
+      };
+      return transport.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          logger.error(error);
+        } else {
+          logger.debug('Email sent: ' + info.response);
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -57,9 +88,22 @@ If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
 
+/**
+ * Send verification email
+ * @param {string} to
+ * @param {string} token
+ * @returns {Promise}
+ */
+const sendReservationEmail = async (to) => {
+  const subject = 'Reservation';
+  // replace this url with the link to the email verification page of your front-end app
+  await sendHtmlEmail(to, subject);
+};
+
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  sendReservationEmail,
 };
