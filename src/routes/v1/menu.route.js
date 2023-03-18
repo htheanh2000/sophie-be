@@ -7,12 +7,9 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(validate(menuValidation.getMenu),menuController.getMenu)
-  .post(validate(menuValidation.createDish),menuController.createDish)
+  .get(validate(menuValidation.getMenu), menuController.getMenu)
+  .post(validate(menuValidation.createDish), menuController.createDish);
 
-  router
-  .route('/:dishId')
-  .get(validate(menuValidation.getDish),menuController.getDish)
-  .delete(menuController.deleteDish)
+router.route('/:dishId').get(validate(menuValidation.getDish), menuController.getDish).delete(menuController.deleteDish);
 
-  module.exports = router;
+module.exports = router;

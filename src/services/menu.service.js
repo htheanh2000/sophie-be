@@ -1,3 +1,4 @@
+const httpStatus = require('http-status');
 const { Menu } = require('../models');
 const ApiError = require('../utils/ApiError');
 /**
@@ -39,7 +40,7 @@ const getDishById = async (id) => {
  */
 const deleteDishById = async (id) => {
   const dish = await getDishById(id);
-  if (!dish)  {
+  if (!dish) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Dish not found');
   }
   await dish.remove();
@@ -55,11 +56,10 @@ const getDishByName = async (name) => {
   return Menu.findOne({ name });
 };
 
-
 module.exports = {
   queryMenu,
   createDish,
   getDishById,
   getDishByName,
-  deleteDishById
+  deleteDishById,
 };

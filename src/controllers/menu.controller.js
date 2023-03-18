@@ -29,12 +29,9 @@ const deleteDish = catchAsync(async (req, res) => {
   res.send(dish);
 });
 
-
-
-
 module.exports = {
   getMenu,
   createDish,
   getDish,
-  deleteDish
+  deleteDish,
 };
