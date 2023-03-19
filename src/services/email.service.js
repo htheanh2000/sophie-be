@@ -1,8 +1,9 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
 const config = require('../config/config');
+const handlebars = require('handlebars');
 const logger = require('../config/logger');
 const fs = require('fs');
-const path = require('path');
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -34,22 +35,25 @@ const sendEmail = async (to, subject, text) => {
  * @param {string} template
  * @returns {Promise}
  */
-const sendHtmlEmail = async (to, subject, template) => {
-  fs.readFile(path.join(__dirname, '../mail-templates/reservation/index.html'), { encoding: 'utf-8' }, function (err, html) {
+const sendHtmlEmail = async (to, subject, template, data) => {
+  const filename = path.join(__dirname, `../mail-templates/${template}/index.html`);
+  fs.readFile(filename, { encoding: 'utf-8' }, function (err, html) {
     if (err) {
       logger.error(err);
     } else {
-      var mailOptions = {
+      const templatehandle = handlebars.compile(html);
+
+      const mailOptions = {
         from: config.email.from,
-        to: to,
-        subject: subject,
-        html: html,
+        to,
+        subject,
+        html: templatehandle(data),
       };
       return transport.sendMail(mailOptions, function (error, info) {
         if (error) {
           logger.error(error);
         } else {
-          logger.debug('Email sent: ' + info.response);
+          logger.debug(info.response);
         }
       });
     }
@@ -94,10 +98,41 @@ If you did not create an account, then ignore this email.`;
  * @param {string} token
  * @returns {Promise}
  */
-const sendReservationEmail = async (to) => {
+const sendReservationEmail = async (data) => {
+  const { name, phone, email, date, time, size, note, occasions, notification } = data;
   const subject = 'Reservation';
+  const template = 'reservation';
   // replace this url with the link to the email verification page of your front-end app
-  await sendHtmlEmail(to, subject);
+  await sendHtmlEmail(email, subject, template, data);
+};
+
+/**
+ * Send verification email
+ * @param {string} to
+ * @param {string} token
+ * @returns {Promise}
+ */
+const sendMarketingEmail = async (data) => {
+  const text = `
+    ${data.message}
+    From:
+    name: ${data.name}
+    email: ${data.email}
+    phone: ${data.phone}
+  `;
+  await sendEmail(config.email.from, data.subject, text);
+};
+
+const sendContactEmail = async (data) => {
+  const subject = 'We heard from you';
+  const text = `
+    Hi ${data.email},
+    We received your message and will contact you soon.
+
+    Best regards,
+    Sophie Restaurant
+  `;
+  await sendEmail(data.email, subject, text);
 };
 
 module.exports = {
@@ -106,4 +141,6 @@ module.exports = {
   sendResetPasswordEmail,
   sendVerificationEmail,
   sendReservationEmail,
+  sendContactEmail,
+  sendMarketingEmail,
 };

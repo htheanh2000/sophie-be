@@ -5,10 +5,9 @@ const catchAsync = require('../utils/catchAsync');
 const { reservationService, emailService } = require('../services');
 
 const makeReservation = catchAsync(async (req, res) => {
-  // const reservation = await reservationService.makeReservation(req.body);
-  await emailService.sendReservationEmail(req.body.email);
-  // res.status(httpStatus.CREATED).send(reservation);
-  res.status(httpStatus.NO_CONTENT).send();
+  const reservation = await reservationService.makeReservation(req.body);
+  emailService.sendReservationEmail(req.body);
+  res.status(httpStatus.CREATED).send(reservation);
 });
 
 module.exports = {

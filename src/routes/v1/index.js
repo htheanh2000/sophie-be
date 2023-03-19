@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const menuRoute = require('./menu.route');
+const contactRoute = require('./contact.route');
 const reservationRoute = require('./reservation.route');
 const uploadRoute = require('./upload.route');
 const config = require('../../config/config');
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/reservation',
     route: reservationRoute,
+  },
+  {
+    path: '/contact',
+    route: contactRoute,
   },
 ];
 
