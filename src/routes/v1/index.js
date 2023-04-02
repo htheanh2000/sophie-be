@@ -36,7 +36,7 @@ const devRoutes = [
 defaultRoutes.forEach((route) => {
 
   if(route.auth) {
-    router.use(route.path,auth, route.route);
+    router.use(route.path,auth(), route.route);
   }
   else {
     router.use(route.path,route.route);
