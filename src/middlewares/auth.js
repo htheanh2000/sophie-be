@@ -3,7 +3,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
 const logger = require('../config/logger');
-const { log } = require('handlebars');
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
   console.log('err ', err)

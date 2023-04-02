@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
+const testRoute = require('./test.route');
 const uploadRoute = require('./upload.route');
 const config = require('../../config/config');
 const auth = require('../../middlewares/auth');
@@ -21,6 +22,11 @@ const defaultRoutes = [
   {
     path: '/upload',
     route: uploadRoute,
+    auth: true
+  },
+  {
+    path: '/tests',
+    route: testRoute,
     auth: true
   },
 ];

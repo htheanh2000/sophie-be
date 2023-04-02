@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { toJSON } = require('./plugins');
+const { toJSON,paginate } = require('./plugins');
 
 const testSchema = mongoose.Schema(
   {
@@ -29,7 +29,7 @@ const testSchema = mongoose.Schema(
       required: true
     },
     duration: {
-      type: number,
+      type: Number,
       required: true,
     },
   },
@@ -41,6 +41,17 @@ const testSchema = mongoose.Schema(
 // add plugin that converts mongoose to json
 testSchema.plugin(toJSON);
 testSchema.plugin(paginate);
+
+/**
+ * Check if name is taken
+ * @param {string} name - The test's name
+ * @param {ObjectId} [excludeTestId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+testSchema.statics.isNameTaken = async function (name, excludeTestId) {
+  const test = await this.findOne({ name, _id: { $ne: excludeTestId } });
+  return !!test;
+};
 
 /**
  * @typedef Test

@@ -5,6 +5,13 @@ const objectId = (value, helpers) => {
   return value;
 };
 
+const uuid = (value, helpers) => {
+  if (!value.match(/^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}(\.[\w]+)?$/i)) {
+    return helpers.message('"{{#label}}" must be a valid uuid');
+  }
+  return value;
+};
+
 const password = (value, helpers) => {
   if (value.length < 8) {
     return helpers.message('password must be at least 8 characters');
@@ -17,5 +24,6 @@ const password = (value, helpers) => {
 
 module.exports = {
   objectId,
+  uuid,
   password,
 };
