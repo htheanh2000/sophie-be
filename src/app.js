@@ -56,8 +56,8 @@ app.use('/v1', routes);
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'public') });
+app.get('/v1', (req, res) => {
+  res.send(`Sophie`);
 });
 
 // send back a 404 error for any unknown api request

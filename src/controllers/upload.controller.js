@@ -30,6 +30,33 @@ const upload = catchAsync(async (req, res) => {
   });
 });
 
+
+const uploadPdf = catchAsync(async (req, res) => {
+  const { file } = req; // assuming you're using middleware to handle file uploads
+  console.log('process.env.BUCKET_NAME',process.env.BUCKET_NAME)
+  const s3Params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: `${uuidv4()}.pdf`,
+    Body: file.buffer,
+  };
+
+  s3.upload(s3Params, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        error: err.message,
+        message: 'Error uploading file !',
+      });
+    } else {
+      res.send({
+        message: 'File uploaded successfully !',
+        data: data.key,
+      });
+    }
+  });
+});
+
+
 module.exports = {
   upload,
+  uploadPdf
 };

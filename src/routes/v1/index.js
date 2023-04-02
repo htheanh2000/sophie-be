@@ -2,38 +2,26 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
-const menuRoute = require('./menu.route');
-const contactRoute = require('./contact.route');
-const reservationRoute = require('./reservation.route');
 const uploadRoute = require('./upload.route');
 const config = require('../../config/config');
-
+const auth = require('../../middlewares/auth');
 const router = express.Router();
 
 const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute,
+    auth: false
   },
   {
     path: '/users',
     route: userRoute,
-  },
-  {
-    path: '/menu',
-    route: menuRoute,
+    auth: true
   },
   {
     path: '/upload',
     route: uploadRoute,
-  },
-  {
-    path: '/reservation',
-    route: reservationRoute,
-  },
-  {
-    path: '/contact',
-    route: contactRoute,
+    auth: true
   },
 ];
 
@@ -46,7 +34,13 @@ const devRoutes = [
 ];
 
 defaultRoutes.forEach((route) => {
-  router.use(route.path, route.route);
+
+  if(route.auth) {
+    router.use(route.path,auth, route.route);
+  }
+  else {
+    router.use(route.path,route.route);
+  }
 });
 
 /* istanbul ignore next */
